@@ -26,20 +26,24 @@ def decide(state):
 		"opponent-play":[],
 		"play":[betray]
 		}
+		save_data(history)
 		return betray
 	elif state["prev-repetitions"]==1:
 		history = load_data()
 		history["opponent-play"].append(state["last-opponent-play"])
 		history["play"].append(cooperation)
+		save_data(history)
 		return cooperation
 	else:
 		history = load_data()
 		history["opponent-play"].append(state["last-opponent-play"])
 		if (history["opponent-play"][-1]==betray and history["play"][-1]==cooperation):
 			history["play"].append(betray)
+			save_data(history)
 			return betray
 		else:# history["opponent-play"][-1]==cooperation & both betray
 			history["play"].append(cooperation)
+			save_data(history)
 			return cooperation
 
 def get_move(state):
