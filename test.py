@@ -6,8 +6,8 @@ state = {
 	"last-opponent-play": None, #0 or 1 depending on strategy played
 	"last-outcome": None, #Might be None if first game, or whatever outcome of play is
 	"prospects": [
-		[4,3],
-		[5,2]
+		[2,5],
+		[3,4]
 	]
 }
 
@@ -37,12 +37,21 @@ def decide(state):
 	else:
 		history = load_data
 		history["opponent-play"].append(state["last-opponent-play"])
-		if (history["opponent-play"][-1]==betray and history["play"][-1]==cooperation):
-			history["play"].append(betray)
-			return betray
-		else:# history["opponent-play"][-1]==cooperation & both betray
-			history["play"].append(cooperation)
-			return cooperation
+		if state["prospects"][cooperation][betray]>state["prospects"][betray][betray]:
+			if history["opponent-play"][-1]!=history["play"][-1]: #either one betray
+				history["play"].append(betray)
+				return betray
+			else:# history["opponent-play"][-1]==cooperation & both betray
+				history["play"].append(cooperation)
+				return cooperation
+		else:
+			# traditional tic for tat
+			if history["opponent-play"][-1]==betray: #either one betray
+				history["play"].append(betray)
+				return betray
+			else:# history["opponent-play"][-1]==cooperation & both betray
+				history["play"].append(cooperation)
+				return cooperation	
 
 def get_move(state):
 	if state["prospects"][0][0]>state["prospects"][1][0] and state["prospects"][0][1]>state["prospects"][1][1]:

@@ -1,6 +1,6 @@
 TEAM_NAME = "mighty_ducks" #Pick a team name
 MEMBERS = ["mrf9n","jr5cf","kc4bf"]
-
+'''
 state = {
 	"team-code": "eef8976e",
 	"game": "sym",
@@ -9,11 +9,11 @@ state = {
 	"last-opponent-play": 1, #0 or 1 depending on strategy played
 	"last-outcome": 4, #Might be None if first game, or whatever outcome of play is
 	"prospects": [
-		[4,5],
-		[3,2]
+		[2,3],
+		[5,4]
 	]
 }
-
+'''
 def decide(state):
 	if state["prospects"][0][0]<state["prospects"][1][0] and state["prospects"][0][1]>state["prospects"][1][1]:
 		cooperation = 0
@@ -37,14 +37,25 @@ def decide(state):
 	else:
 		history = load_data()
 		history["opponent-play"].append(state["last-opponent-play"])
-		if (history["opponent-play"][-1]==betray and history["play"][-1]==cooperation):
-			history["play"].append(betray)
-			save_data(history)
-			return betray
-		else:# history["opponent-play"][-1]==cooperation & both betray
-			history["play"].append(cooperation)
-			save_data(history)
-			return cooperation
+		if state["prospects"][cooperation][betray]>state["prospects"][betray][betray]:
+			if history["opponent-play"][-1]!=history["play"][-1]: #either one betray
+				history["play"].append(betray)
+				save_data(history)
+				return betray
+			else:# history["opponent-play"][-1]==cooperation & both betray
+				history["play"].append(cooperation)
+				save_data(history)
+				return cooperation
+		else:
+			# traditional tic for tat
+			if history["opponent-play"][-1]==betray: #either one betray
+				history["play"].append(betray)
+				save_data(history)
+				return betray
+			else:# history["opponent-play"][-1]==cooperation & both betray
+				history["play"].append(cooperation)
+				save_data(history)
+				return cooperation			
 
 def get_move(state):
 	if state["prospects"][0][0]>state["prospects"][1][0] and state["prospects"][0][1]>state["prospects"][1][1]:
