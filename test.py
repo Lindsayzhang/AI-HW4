@@ -1,10 +1,10 @@
 state = {
-	"team-code": "eef8976e",
+	"team-code": "24/7AI",
 	"game": "sym",
 	"opponent-name": "mighty-ducks",
-	"prev-repetitions": None, #Might be None if first game ever, or other number
-	"last-opponent-play": 1, #0 or 1 depending on strategy played
-	"last-outcome": 4, #Might be None if first game, or whatever outcome of play is
+	"prev-repetitions": 5, #Might be None if first game ever, or other number
+	"last-opponent-play": None, #0 or 1 depending on strategy played
+	"last-outcome": None, #Might be None if first game, or whatever outcome of play is
 	"prospects": [
 		[4,3],
 		[5,2]
@@ -12,8 +12,8 @@ state = {
 }
 
 load_data = {
-	"opponent-play":[],
-	"play":[]
+	"opponent-play":[0,1,1,0],
+	"play":[1,0,1,1,0]
 }
 
 def decide(state):
@@ -35,6 +35,7 @@ def decide(state):
 		history["play"].append(cooperation)
 		return cooperation
 	else:
+		history = load_data
 		history["opponent-play"].append(state["last-opponent-play"])
 		if (history["opponent-play"][-1]==betray and history["play"][-1]==cooperation):
 			history["play"].append(betray)
