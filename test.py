@@ -1,17 +1,19 @@
-TEAM_NAME = "mighty_ducks" #Pick a team name
-MEMBERS = ["mrf9n","jr5cf","kc4bf"]
-
 state = {
 	"team-code": "eef8976e",
 	"game": "sym",
 	"opponent-name": "mighty-ducks",
-	"prev-repetitions": 10, #Might be None if first game ever, or other number
+	"prev-repetitions": None, #Might be None if first game ever, or other number
 	"last-opponent-play": 1, #0 or 1 depending on strategy played
 	"last-outcome": 4, #Might be None if first game, or whatever outcome of play is
 	"prospects": [
-		[4,5],
-		[3,2]
+		[4,3],
+		[5,2]
 	]
+}
+
+load_data = {
+	"opponent-play":[],
+	"play":[]
 }
 
 def decide(state):
@@ -26,24 +28,19 @@ def decide(state):
 		"opponent-play":[],
 		"play":[betray]
 		}
-		save_data(history)
 		return betray
 	elif state["prev-repetitions"]==1:
-		history = load_data()
+		history = load_data
 		history["opponent-play"].append(state["last-opponent-play"])
 		history["play"].append(cooperation)
-		save_data(history)
 		return cooperation
 	else:
-		history = load_data()
 		history["opponent-play"].append(state["last-opponent-play"])
 		if (history["opponent-play"][-1]==betray and history["play"][-1]==cooperation):
 			history["play"].append(betray)
-			save_data(history)
 			return betray
 		else:# history["opponent-play"][-1]==cooperation & both betray
 			history["play"].append(cooperation)
-			save_data(history)
 			return cooperation
 
 def get_move(state):
@@ -57,3 +54,5 @@ def get_move(state):
 	"team-code": state["team-code"],
 	"move": final_move
 	}
+
+print(get_move(state))
