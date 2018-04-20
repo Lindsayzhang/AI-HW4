@@ -9,7 +9,7 @@ state = {
 	"opponent-name": "mighty-ducks",
 	"prev-repetitions":0, #Might be None if first game ever, or other number
 	"last-opponent-play": 1, #0 or 1 depending on strategy played
-	"last-outcome": 4, #Might be None if first game, or whatever outcome of play is
+	"last-outcome": None, #Might be None if first game, or whatever outcome of play is
 	"prospects": [
 		[5,2],
 		[4,3]
