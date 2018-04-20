@@ -1,8 +1,8 @@
-TEAM_NAME = "mighty_ducks" #Pick a team name
-MEMBERS = ["mrf9n","jr5cf","kc4bf"]
+TEAM_NAME = "247AI" #Pick a team name
+MEMBERS = ["hg5mc","wz4u","jw6qs"]
 history = {
 	"opponent-play":[],
-	"play":[betray]
+	"play":[]
 }
 '''
 state = {
@@ -17,53 +17,63 @@ state = {
 		[5,4]
 	]
 }
-'''
-def decide(state):
-	if state["prospects"][0][0]<state["prospects"][1][0] and state["prospects"][0][1]>state["prospects"][1][1]:
-		cooperation = 0
-		betray = 1
-	else:
-		cooperation = 1
-		betray = 0	
-	if state["prev-repetitions"]==None:
-		history = {
-		"opponent-play":[],
-		"play":[betray]
-		}
-#		save_data(history)
-		return betray
-	elif state["prev-repetitions"]==1:
-		history["opponent-play"].append(state["last-opponent-play"])
-		history["play"].append(cooperation)
-#		save_data(history)
-		return cooperation
-	else:
-#		history = load_data()
-		history["opponent-play"].append(state["last-opponent-play"])
-		if state["prospects"][cooperation][betray]>state["prospects"][betray][betray]:
-			if history["opponent-play"][-1]!=history["play"][-1]: #either one betray
-				history["play"].append(betray)
-				return betray
-			else:# history["opponent-play"][-1]==cooperation & both betray
-				history["play"].append(cooperation)
-				return cooperation
-		else:
-			# traditional tic for tat
-			if history["opponent-play"][-1]==betray: #either one betray
-				history["play"].append(betray)
-				return betray
-			else:# history["opponent-play"][-1]==cooperation & both betray
-				history["play"].append(cooperation)
-				return cooperation			
+'''		
 
 def get_move(state):
-	if state["prospects"][0][0]>state["prospects"][1][0] and state["prospects"][0][1]>state["prospects"][1][1]:
-		final_move=0
-	elif state["prospects"][1][1]>state["prospects"][0][1] and state["prospects"][1][0]>state["prospects"][0][0]:
-		final_move=1
-	else:
-		final_move=decide(state)
-	return {
-	"team-code": state["team-code"],
-	"move": final_move
-	}
+	if state["game"]=="sym":
+		if state["prospects"][0][0]>=state["prospects"][1][1]:
+			cooperation=0
+			betray=1
+		else:
+			cooperation=1
+			betray=0
+		if state["prev-repetitions"]==0:
+			final_move=betray
+		else:
+			# A>B>??,D>C>?? 4 cases
+			if state["prospects"][cooperation][cooperation]>state["prospects"][cooperation][betray] \
+			and state["prospects"][cooperation][betray]>state["prospects"][betray][betray] \
+				and state["prospects"][cooperation][betray]>state["prospects"][betray][cooperation]:
+				final_move = cooperation
+
+			# B>A>??, C>D>?? 4 cases
+			elif state["prospects"][cooperation][betray]>state["prospects"][cooperation][cooperation] \
+			and state["prospects"][cooperation][cooperation]>state["prospects"][betray][betray] \
+				and state["prospects"][cooperation][cooperation]>state["prospects"][betray][cooperation]:
+				final_move = cooperation
+
+			# A>D>??, D>A>?? 4 cases
+			elif state["prospects"][cooperation][cooperation]>state["prospects"][betray][betray] \
+				and state["prospects"][betray][betray]>state["prospects"][cooperation][betray] \
+				and state["prospects"][betray][betray]>state["prospects"][betray][cooperation]:
+
+				# if same, stay same
+				if state["last-outcome"]==state["prospects"][cooperation][cooperation] \
+					or state["last-outcome"]==state["prospects"][betray][betray]:
+					final_move = state["last-opponent-play"]
+				else:
+					final_move = 1-state["last-opponent-play"]
+
+			# B>C>??, C>B>?? 4 cases
+			elif state["prospects"][cooperation][betray]>state["prospects"][betray][cooperation] \
+				and state["prospects"][betray][cooperation]>state["prospects"][cooperation][cooperation] \
+				and state["prospects"][betray][cooperation]>state["prospects"][betray][betray]:
+				# if same, be different
+				if state["last-outcome"]==state["prospects"][cooperation][cooperation] \
+					or state["last-outcome"]==state["prospects"][betray][betray]:
+					final_move = 1-state["last-opponent-play"]
+				else:
+					final_move = state["last-opponent-play"]				
+
+			# BDAC, ACBD betray 4 cases
+			elif state["prospects"][cooperation][betray]>state["prospects"][betray][betray]>state["prospects"][cooperation][cooperation]>state["prospects"][betray][cooperation] \
+				or state["prospects"][cooperation][cooperation]>state["prospects"][betray][cooperation]>state["prospects"][cooperation][betray]>state["prospects"][betray][betray]:
+				final_move = cooperation
+
+			else:
+				final_move = state["last-opponent-play"]
+
+		return {
+		"team-code": state["team-code"],
+		"move": final_move
+		}
