@@ -17,6 +17,7 @@ state = {
 
 def get_move(state):
 	if state["game"]=="sym":
+		# decide which (0/1) is cooperation
 		if state["prospects"][0][0]>state["prospects"][1][1]:
 			cooperation=0
 			betray=1
@@ -33,55 +34,60 @@ def get_move(state):
 		print("cooperation: ", cooperation)
 		print("betray: ", betray)
 
-		# A>B>??,D>C>?? 4 cases
+		# A>B>C>D, ABDC,DCAB, DCBA (4 cases), e.g. [[4,3],[2,1]], we directly cooperate
 		if state["prospects"][cooperation][cooperation]>=state["prospects"][cooperation][betray] \
 		and state["prospects"][cooperation][betray]>=state["prospects"][betray][betray] \
 			and state["prospects"][cooperation][betray]>=state["prospects"][betray][cooperation]:
 			print("1st")
 			final_move = cooperation
 
-		# B>A>??, C>D>?? 4 cases
+		# B>A>C>D, BADC, CDAB, CDBA (4 cases), e.g. [[3,4],[1,2]], we directly cooperate
 		elif state["prospects"][cooperation][betray]>=state["prospects"][cooperation][cooperation] \
 		and state["prospects"][cooperation][cooperation]>=state["prospects"][betray][betray] \
 			and state["prospects"][cooperation][cooperation]>=state["prospects"][betray][cooperation]:
 			print("2nd")
 			final_move = cooperation
 
-		# A>D>??, D>A>?? 4 cases
+		# A>D>B>C, ADCB, DABC, DACB (4 cases), e.g. [[4,1],[2,3]]
 		elif state["prospects"][cooperation][cooperation]>=state["prospects"][betray][betray] \
 			and state["prospects"][betray][betray]>=state["prospects"][cooperation][betray] \
 			and state["prospects"][betray][betray]>=state["prospects"][betray][cooperation]:
 			print("3rd")
+			# if the first round, we cooperate
 			if state["prev-repetitions"]==0:
 				final_move=cooperation
-			# if same, stay same
+			# if last time, our choice is the same as opponent, choose what we chose last time to stay the same with opponent
 			elif state["last-outcome"]==state["prospects"][cooperation][cooperation] \
 				or state["last-outcome"]==state["prospects"][betray][betray]:
 				final_move = state["last-opponent-play"]
+			# if last time, our choice is different from opponent's choice, choose another one to stay the same with opponent
 			else:
 				final_move = 1-state["last-opponent-play"]
 
-		# B>C>??, C>B>?? 4 cases
+		# B>C>A>D, BCDA, CBAD, CBDA (4 cases), e.g. [[2,4],[3,1]]
 		elif state["prospects"][cooperation][betray]>=state["prospects"][betray][cooperation] \
 			and state["prospects"][betray][cooperation]>=state["prospects"][cooperation][cooperation] \
 			and state["prospects"][betray][cooperation]>=state["prospects"][betray][betray]:
 			print("4th")
+			# if the first round, we cooperate			
 			if state["prev-repetitions"]==0:
 				final_move=cooperation
-			# if same, be different
+			# if last time, our choice is the same as opponent, choose another one to be different from opponent
 			elif state["last-outcome"]==state["prospects"][cooperation][cooperation] \
 				or state["last-outcome"]==state["prospects"][betray][betray]:
 				final_move = 1-state["last-opponent-play"]
+			# if last time, our choice is different from opponent, choose what we chose last time to be different from opponent				
 			else:
 				final_move = state["last-opponent-play"]				
 
-		# BDAC, ACBD betray 4 cases
+		# BDAC, ACBD, CADB, DBCA, (4 cases) e.g. [[4,2],[3,1]], we directly cooperate
 		elif state["prospects"][cooperation][betray]>=state["prospects"][betray][betray]>=state["prospects"][cooperation][cooperation]>=state["prospects"][betray][cooperation] \
 			or state["prospects"][cooperation][cooperation]>=state["prospects"][betray][cooperation]>=state["prospects"][cooperation][betray]>=state["prospects"][betray][betray]:
 			print("5th")
 			final_move = cooperation
 
-		else: # 4 cases
+		# ACDB, CABD, DBAC, BDCA (4 cases) e.g. [[4,1],[3,2]], tit for tat
+		else: 
 			print("6th")
 			if state["prev-repetitions"]==0:
 				final_move=betray
