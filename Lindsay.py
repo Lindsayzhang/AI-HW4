@@ -21,11 +21,17 @@ state = {
 
 def get_move(state):
 	if state["game"]=="sym":
-		if state["prospects"][0][0]>=state["prospects"][1][1]:
+		if state["prospects"][0][0]>state["prospects"][1][1]:
 			cooperation=0
 			betray=1
-		else:
+		elif state["prospects"][0][0]<state["prospects"][1][1]:
 			cooperation=1
+			betray=0
+		elif state["prospects"][0][1]<state["prospects"][1][0]:
+			cooperation =  0
+			betray = 1
+		else:
+			cooperation = 1
 			betray=0
 		if state["prev-repetitions"]==0:
 			final_move=betray
@@ -46,7 +52,6 @@ def get_move(state):
 			elif state["prospects"][cooperation][cooperation]>state["prospects"][betray][betray] \
 				and state["prospects"][betray][betray]>state["prospects"][cooperation][betray] \
 				and state["prospects"][betray][betray]>state["prospects"][betray][cooperation]:
-
 				# if same, stay same
 				if state["last-outcome"]==state["prospects"][cooperation][cooperation] \
 					or state["last-outcome"]==state["prospects"][betray][betray]:
@@ -70,7 +75,7 @@ def get_move(state):
 				or state["prospects"][cooperation][cooperation]>state["prospects"][betray][cooperation]>state["prospects"][cooperation][betray]>state["prospects"][betray][betray]:
 				final_move = cooperation
 
-			else:
+			else: # 4 cases
 				final_move = state["last-opponent-play"]
 
 		return {
