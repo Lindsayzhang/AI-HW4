@@ -107,7 +107,7 @@ def get_move(state):
 				if state["prev-repetitions"]>=6:
 					a = 0
 					for i in range(5):
-						if history["oppoplay"][-1-i]!=history["ourplay"][-1-i]:
+						if history["oppoplay"][-1-i]!=history["ourplay"][-2-i]:
 							a+=1
 					if a==5 and history["ourplay"][-1]==cooperation:
 						final_move = cooperation
