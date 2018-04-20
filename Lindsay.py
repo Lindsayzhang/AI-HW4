@@ -31,7 +31,7 @@ def get_move(state):
 			final_move=betray
 		else:
 			# A>B>??,D>C>?? 4 cases
-			if state["prospects"][cooperation][cooperation]>state["prospects"][cooperation][betray] \
+			if state["prospects"][cooperation][cooperation]>=state["prospects"][cooperation][betray] \
 			and state["prospects"][cooperation][betray]>state["prospects"][betray][betray] \
 				and state["prospects"][cooperation][betray]>state["prospects"][betray][cooperation]:
 				final_move = cooperation
