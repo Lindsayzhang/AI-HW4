@@ -1,5 +1,5 @@
 TEAM_NAME = "247AI" #Pick a team name
-MEMBERS = ["hg5mc","wz4u","jw6qs"]
+MEMBERS = ["hg5mc","wz4u","jw6qs", "jz5ez"]
 history = {
 	"opponent-play":[],
 	"play":[]
