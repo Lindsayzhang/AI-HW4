@@ -85,18 +85,12 @@ def decide(state):
 
 
 def get_move(state):
-    '''if state["prospects"][0][0] > state["prospects"][1][0] and state["prospects"][0][1] > state["prospects"][1][1]:
-        final_move = 0
-    elif state["prospects"][1][1] > state["prospects"][0][1] and state["prospects"][1][0] > state["prospects"][0][0]:
-        final_move = 1
-    else:
-        final_move = decide(state)
-    print(final_move)'''
-    play = decide(state)
-    return {
-        "team-code": state["team-code"],
-        "move": play
-    }
+    if state["game"] = "sym":
+        play = decide(state)
+        return {
+            "team-code": state["team-code"],
+            "move": play
+        }
 
 
 ###################################

@@ -1,6 +1,14 @@
 TEAM_NAME = "247AI" #Pick a team name
+<<<<<<< HEAD
 MEMBERS = ["hg5mc","wz4u","jw6qs"]
 
+=======
+MEMBERS = ["hg5mc","wz4u","jw6qs", "jz5ez"]
+history = {
+	"opponent-play":[],
+	"play":[]
+}
+>>>>>>> 07a8d421b5ffcc858567bf206a4bedaa44a65579
 '''
 state = {
 	"team-code": "eef8976e",
