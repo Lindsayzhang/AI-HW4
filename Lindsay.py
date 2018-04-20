@@ -98,15 +98,13 @@ def get_move(state):
 					"oppoplay":[],
 					"ourplay":[]
 				}
-				with open(file_name,'w') as file_object:
-					json.dump(history, file_object)
 				history["ourplay"].append(final_move)
-				history = json.dumps(history)
+				with open(file_name,'w') as file_object:
+					file_object.write(json.dumps(history))
 			else:
 				with open(file_name,'r') as file_object:
 					history=json.load(file_object)
-				history["oppoplay"].append(state["last-opponent-play"])
-				if state["prev-repetitions"]>=5:
+				if state["prev-repetitions"]>=6:
 					a = 0
 					for i in range(5):
 						if history["oppoplay"][-1-i]!=history["ourplay"][-1-i]:
@@ -118,7 +116,9 @@ def get_move(state):
 				else: 
 					final_move = state["last-opponent-play"]
 				history["ourplay"].append(final_move)
-				history = json.dumps(history)
+				history["oppoplay"].append(state["last-opponent-play"])
+				with open(file_name,'w') as file_object:
+					file_object.write(json.dumps(history))
 
 		return {
 		"team-code": state["team-code"],
