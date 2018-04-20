@@ -1,9 +1,5 @@
 TEAM_NAME = "mighty_ducks" #Pick a team name
 MEMBERS = ["mrf9n","jr5cf","kc4bf"]
-history = {
-	"opponent-play":[],
-	"play":[betray]
-}
 '''
 state = {
 	"team-code": "eef8976e",
@@ -30,30 +26,35 @@ def decide(state):
 		"opponent-play":[],
 		"play":[betray]
 		}
-#		save_data(history)
+		save_data(history)
 		return betray
 	elif state["prev-repetitions"]==1:
+		history = load_data()
 		history["opponent-play"].append(state["last-opponent-play"])
 		history["play"].append(cooperation)
-#		save_data(history)
+		save_data(history)
 		return cooperation
 	else:
-#		history = load_data()
+		history = load_data()
 		history["opponent-play"].append(state["last-opponent-play"])
 		if state["prospects"][cooperation][betray]>state["prospects"][betray][betray]:
 			if history["opponent-play"][-1]!=history["play"][-1]: #either one betray
 				history["play"].append(betray)
+				save_data(history)
 				return betray
 			else:# history["opponent-play"][-1]==cooperation & both betray
 				history["play"].append(cooperation)
+				save_data(history)
 				return cooperation
 		else:
 			# traditional tic for tat
 			if history["opponent-play"][-1]==betray: #either one betray
 				history["play"].append(betray)
+				save_data(history)
 				return betray
 			else:# history["opponent-play"][-1]==cooperation & both betray
 				history["play"].append(cooperation)
+				save_data(history)
 				return cooperation			
 
 def get_move(state):
