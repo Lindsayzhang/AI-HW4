@@ -13,8 +13,12 @@ state = {
 		[4,3]
 	]
 }
-		
 
+history = {
+	"oppo-play":[]
+	"self-play":[]
+}
+		
 def get_move(state):
 	if state["game"]=="sym":
 		# decide which (0/1) is cooperation
@@ -91,8 +95,25 @@ def get_move(state):
 			print("6th")
 			if state["prev-repetitions"]==0:
 				final_move=betray
+				history = {
+					"oppo-play":[]
+					"self-play":[]
+				}
+				history["self-play"].append(final_move)
 			else:
-				final_move = state["last-opponent-play"]
+				history["oppo-play"].append(state["last-opponent-play"])
+				if state["prev-repetitions"]>=5:
+					a = 0
+					for i in range(5):
+						if history["oppo-play"][-1-i]!=history["self-play"][-1-i]:
+							a+=1
+					if a==5 and history["self-play"][-1]==cooperation:
+						final_move = cooperation
+					else:
+						final_move = state["last-opponent-play"]
+
+				else: 
+					final_move = state["last-opponent-play"]
 
 		return {
 		"team-code": state["team-code"],
