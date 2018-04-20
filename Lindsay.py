@@ -7,7 +7,7 @@ state = {
 	"team-code": "eef8976e",
 	"game": "sym",
 	"opponent-name": "mighty-ducks",
-	"prev-repetitions": 10, #Might be None if first game ever, or other number
+	"prev-repetitions":0, #Might be None if first game ever, or other number
 	"last-opponent-play": 1, #0 or 1 depending on strategy played
 	"last-outcome": 4, #Might be None if first game, or whatever outcome of play is
 	"prospects": [
@@ -91,25 +91,34 @@ def get_move(state):
 		# ACDB, CABD, DBAC, BDCA (4 cases) e.g. [[4,1],[3,2]], tit for tat
 		else: 
 			print("6th")
+			file_name="AI.json"
 			if state["prev-repetitions"]==0:
 				final_move=betray
-				oppoplay=[]
-				ourplay=[]
-				ourplay.append(final_move)
+				history = {
+					"oppoplay":[],
+					"ourplay":[]
+				}
+				with open(file_name,'w') as file_object:
+					json.dump(history, file_object)
+				history["ourplay"].append(final_move)
+				history = json.dumps(history)
 			else:
-				oppoplay.append(state["last-opponent-play"])
+				with open(file_name,'r') as file_object:
+					history=json.load(file_object)
+				history["oppoplay"].append(state["last-opponent-play"])
 				if state["prev-repetitions"]>=5:
 					a = 0
 					for i in range(5):
-						if oppoplay[-1-i]!=ourplay[-1-i]:
+						if history["oppoplay"][-1-i]!=history["ourplay"][-1-i]:
 							a+=1
-					if a==5 and ourplay[-1]==cooperation:
+					if a==5 and history["ourplay"][-1]==cooperation:
 						final_move = cooperation
 					else:
 						final_move = state["last-opponent-play"]
 				else: 
 					final_move = state["last-opponent-play"]
-				ourplay.append(final_move)
+				history["ourplay"].append(final_move)
+				history = json.dumps(history)
 
 		return {
 		"team-code": state["team-code"],
