@@ -1,8 +1,7 @@
-import random
 import json
 
-TEAM_NAME = "mighty_ducks"  # Pick a team name
-MEMBERS = ["mrf9n", "jr5cf", "kc4bf"]
+TEAM_NAME = "forfun"  # Pick a team name
+MEMBERS = ["jz5ez"]
 
 state = {
     "team-code": "eef8976e",
@@ -17,50 +16,67 @@ state = {
     ]
 }
 
-history = {
+template = {
     "opponent-play": [],
     "play": [],
     "score": 0
 }
+def load_data():
+    with open('history.txt','r') as f:
+        data = json.load(f)
+    return data
+
+def save_data(data):
+    with open('history.txt', 'w') as f:
+        json.dump(data, f)
 
 def tit42tat(state, play):
-    global history
+    history = template
     if state["last-outcome"] == None:
         #print("tit42tat")
+        save_data(history)
+        history = load_data()
         history["play"].append(play)
         history["opponent-play"].append(state["last-opponent-play"])
+        save_data(history)
         #print(history)
         return play
     elif len(history["opponent-play"]) == 1:
+        history = load_data()
         history["play"].append(play)
         history["opponent-play"].append(state["last-opponent-play"])
+        save_data(history)
         #print(history)
         return play
+    history = load_data()
     #random check
     if len(history["opponent-play"]) > 4 and len(history["opponent-play"])%5 ==0 and state["prospects"][play][play%1]:
+        #history = load_data()
         if history["play"][-1] == 0:
             p = 1
         else:
             p = 0
-        print("h", p, "play", play)
+        #print("h", p, "play", play)
         history["play"].append(p)
         history["opponent-play"].append(state["last-opponent-play"])
+        save_data(history)
         #print(history)
         return p
     if history["opponent-play"][-1] == state["last-opponent-play"]:
+        #history = load_data()
         p = state["last-opponent-play"]
         history["play"].append(p)
         history["opponent-play"].append(state["last-opponent-play"])
+        save_data(history)
         #print("same")
         return p
     else:
+        #history = load_data()
         history["play"].append(play)
         history["opponent-play"].append(state["last-opponent-play"])
+        save_data(history)
         #print(history)
         return play
-
-
-
 
 def decide(state):
     #global history
@@ -85,7 +101,7 @@ def decide(state):
 
 
 def get_move(state):
-    if state["game"] = "sym":
+    if state["game"] == "sym":
         play = decide(state)
         return {
             "team-code": state["team-code"],
